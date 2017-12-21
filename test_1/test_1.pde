@@ -3,9 +3,8 @@ int node_count = 10;
 int edge_count = 9;
 //int father_code[][]= {{1, 2, 3, 4, 5, 6, 7, 8, 9},
 //                      {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-int prufer_code[] = {6, 0, 2, 6, 2, 9, 9, 2, 0};
-int counter = 0;
-String s;
+//int prufer_code[] = {6, 0, 2, 6, 2, 9, 9, 2};
+int prufer_code[] = {0, 0, 0, 0, 0, 0, 0, 0,};
 void setup() {
   size(1920, 1080);
   fill(255);
@@ -17,7 +16,9 @@ void setup() {
   tree.prufer_code = prufer_code;
   tree.construct_from_prufer_code();
   //tree.draw_from_father_code();
-  fill(255);
+  noFill();
+  rect(width-300, 280, 180, 60);
+  fill(0);
   text("Click here to draw tree from father code!", width-300, 300, 180, 60);
 }
 
