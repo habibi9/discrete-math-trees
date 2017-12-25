@@ -1,6 +1,6 @@
 class Graph{
-  ArrayList<Node> nodes;
-  ArrayList<Edge> edges;
+  Node[] nodes;
+  Edge[] edges;
   int node_count;
   int edge_count;
   int father_code[][];
@@ -9,13 +9,13 @@ class Graph{
   Graph(int node_countTemp, int edge_countTemp){
     node_count = node_countTemp;
     edge_count = edge_countTemp;
-    nodes = new ArrayList<Node>();
-    edges = new ArrayList<Edge>();
+    nodes = new Node[node_count];
+    edges = new Edge[edge_count];
     father_code = new int[2][edge_count];
     for(int a = 0; a < node_count; a++){
       int nodeX = int(random(10, width - 400));
       int nodeY = int(random(10, height - 10));
-      nodes.add(new Node(nodeX, nodeY, a));
+      nodes[a] = new Node(nodeX, nodeY, 0);
     }
     for(int a = 0; a < 2; a++){
       for(int b = 0; b < edge_count; b++){
@@ -28,57 +28,52 @@ class Graph{
     for(int a = 0; a < edge_count; a++){
       int start = father_code[0][a];
       int end = father_code[1][a];
-      edges.add(new Edge(nodes.get(start), nodes.get(end), 255));
+      edges[a] = new Edge(nodes[start], nodes[end], 0);
     }
     for(int a = 0; a < node_count; a++){
-      //int degree = get_degree_from_father_code(a);
-      //nodes.get(a).define_neighbors(degree);
-      initialize_nodes();
+      int degree = get_degree_from_father_code(a);
+      nodes[a].define_neighbors(degree);
+      initialize_nodes(nodes[a]);
     }
 
     draw_edges();
   }
 
   void draw_nodes(){
-    for(Node node: nodes){
+    for(int a = 0; a < node_count; a++){
       fill(0);
-      text(str(node.uid), float(node.nodeX+20), float(node.nodeY), 20.0, 20.0);
-      node.display();
+      text(str(a), float(nodes[a].nodeX+20), float(nodes[a].nodeY), 20.0, 20.0);
+      nodes[a].display();
     }
   }
 
   void draw_edges(){
     String s = "";
-    for(Edge edge: edges){
-      edge.display();
-      s += (edge.nodes[0].uid + " " + edge.nodes[1].uid + " " + edge.weight + "\n");
+    for(int a = 0; a < edge_count; a++){
+      edges[a].display();
+      s += (father_code[0][a] + " " + father_code[1][a] + " " + edges[a].weight + "\n");
     }
     text(s, width-300, 100, 60, 500);
   }
 
-  void initialize_nodes(){
+  void initialize_nodes(Node a){
     int counter = 0;
     /*for(int b = 0; b < 2; b++){
       for(int c = 0; c < edge_count; c++){
         if(father_code[b][c] == a){
           nodes[a].neighbors[counter] = father_code[neighbor_row(b)][c];
           counter++;//
-              }
+        }
+      }
     }*/
-    for(Edge edge: edges){
-      edge.nodes[0].degree++;
-      edge.nodes[1].degree++;
-      edge.nodes[0].neighbors.add(edge.nodes[1]);
-      edge.nodes[1].neighbors.add(edge.nodes[0]);
-    }
-    /*for(int b = 0; b < 2; b++){
+    for(int b = 0; b < 2; b++){
       for(int c = 0; c < edge_count; c++){        
         if(edges[c].nodes[b] == a){
           a.neighbors[counter] = edges[c].nodes[neighbor_row(b)];
           counter++;
         }
       }
-    }*/
+    }
   }
   int get_degree_from_father_code(int a){
     int degree = 0;
@@ -114,16 +109,11 @@ class Tree extends Graph{
   }
 
   void draw_edges(){
-    String s = "";
-    for(Edge edge: edges){
-      edge.display();
-      s += (edge.nodes[0].uid + " " + edge.nodes[1].uid + " " + edge.weight + "\n");
-    }
-    text(s, width-240, 100, 60, 500);
+    super.draw_edges();
   }
 
-  void initialize_nodes(){
-    super.initialize_nodes();
+  void initialize_nodes(Node a){
+    super.initialize_nodes(a);
   }
 
   int get_degree_from_father_code(int a){
@@ -145,7 +135,7 @@ class Tree extends Graph{
 }
 
 
-/*class Bipartite extends Tree{
+class Bipartite extends Tree{
   int spacing;
   int startX;
   int startY;
@@ -212,14 +202,14 @@ class Tree extends Graph{
     super.construct_from_prufer_code();
   }
 
-  void initialize_nodes(int a){
+  void initialize_nodes(Node a){
     super.initialize_nodes(a);
   }
 
   int get_degree_from_father_code(int a){
     return super.get_degree_from_father_code(a);
   }
-}*/
+}
 
 
 boolean doesnt_appear(int val, int array[], int start_pos, int length){
