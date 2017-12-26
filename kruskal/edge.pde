@@ -7,10 +7,6 @@ class Edge{
 	int weight;
 	color edgeColor;
  	Edge(Node node_1, Node node_2, int edgeColorTemp){
-		/*edgeX1 = edgeX1Temp;
-		edgeY1 = edgeY1Temp;
-		edgeX2 = edgeX2Temp;
-		edgeY2 = edgeY2Temp;*/
 		nodes = new Node[2];
 		nodes[0] = node_1;
 		nodes[1] = node_2;

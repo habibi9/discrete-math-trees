@@ -4,6 +4,7 @@ class Graph{
   int node_count;
   int edge_count;
   int father_code[][];
+  //int prufer_code[];
 
   Graph(int node_countTemp, int edge_countTemp){
     node_count = node_countTemp;
@@ -30,6 +31,8 @@ class Graph{
       edges.add(new Edge(nodes.get(start), nodes.get(end), 255));
     }
     for(int a = 0; a < node_count; a++){
+      //int degree = get_degree_from_father_code(a);
+      //nodes.get(a).define_neighbors(degree);
       initialize_nodes();
     }
 
@@ -55,12 +58,27 @@ class Graph{
 
   void initialize_nodes(){
     int counter = 0;
+    /*for(int b = 0; b < 2; b++){
+      for(int c = 0; c < edge_count; c++){
+        if(father_code[b][c] == a){
+          nodes[a].neighbors[counter] = father_code[neighbor_row(b)][c];
+          counter++;//
+              }
+    }*/
     for(Edge edge: edges){
       edge.nodes[0].degree++;
       edge.nodes[1].degree++;
       edge.nodes[0].neighbors.add(edge.nodes[1]);
       edge.nodes[1].neighbors.add(edge.nodes[0]);
     }
+    /*for(int b = 0; b < 2; b++){
+      for(int c = 0; c < edge_count; c++){        
+        if(edges[c].nodes[b] == a){
+          a.neighbors[counter] = edges[c].nodes[neighbor_row(b)];
+          counter++;
+        }
+      }
+    }*/
   }
   int get_degree_from_father_code(int a){
     int degree = 0;
@@ -71,6 +89,10 @@ class Graph{
     }
     return degree;
   }
+
+  /*void add_edge(Node start, Node end){
+    
+  }*/
 }
 
 

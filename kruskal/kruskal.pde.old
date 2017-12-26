@@ -3,10 +3,15 @@ Graph graph;
 int counter_rijks = 0;
 int edge_counter = 0;
 
+//int graph_father_code[][] = {{0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4}, 
+//							   {1, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5, 4, 5, 5}};
+//int graph_father_code[][];
+//int node_count = 10;
 void setup() {
 	size(1920, 1080);
 	fill(255);
 	rect(10, 10, width-400, height-20);
+
 
 	graph = new Graph(node_count, combination(node_count, 2));
 	tree = new Tree(node_count, node_count-1);
@@ -27,6 +32,7 @@ void setup() {
 	bubble_sort_by_weight(graph.edges, graph.edge_count);
 
 	for(int a = 0; a < graph.node_count; a++){
+		//tree.nodes.replace(new Node(graph.nodes.get(a).nodeX, graph.nodes.get(a).nodeY, a, color(0, 0, 255)));
 		tree.nodes.get(a).nodeX = graph.nodes.get(a).nodeX;
 		tree.nodes.get(a).nodeY = graph.nodes.get(a).nodeY;
 		tree.nodes.get(a).uid = graph.nodes.get(a).uid;
@@ -39,40 +45,55 @@ void setup() {
 }
 
 void draw() {
+	// int edge_counter = 0;
 	if(edge_counter < tree.edge_count && counter_rijks < graph.edge_count){
 		Edge edge = graph.edges.get(counter_rijks);
-		if(!determine_path(tree.nodes.get(edge.nodes[0].uid), tree.nodes.get(edge.nodes[1].uid))){
-			Edge edge_temp = edge;
-			edge_temp.edgeColor = color(0, 255, 0);
-			for(Node node: tree.nodes){
-				for(int a = 0; a < 2; a++){
-					if(node.uid == edge_temp.nodes[a].uid){
-						edge_temp.nodes[a] = node;
-						node.degree++;
+		//for(Edge edge: graph.edges){
+			//long lastTime = millis();
+			//edge.edgeColor = color(0, 0, 255);
+			//edge.display();
+			//for(int a = 60; a >0; a--){
+			//	println(a);
+			//}
+			//edge.edgeColor = color(255, 255, 255);
+			//edge.display();
+			//if(millis() - lastTime > 0){
+				if(!determine_path(tree.nodes.get(edge.nodes[0].uid), tree.nodes.get(edge.nodes[1].uid))){
+					Edge edge_temp = edge;
+					edge_temp.edgeColor = color(0, 255, 0);
+					for(Node node: tree.nodes){
+						for(int a = 0; a < 2; a++){
+							if(node.uid == edge_temp.nodes[a].uid){
+								edge_temp.nodes[a] = node;
+								node.degree++;
+								//node.neighbors.add(edge_temp.nodes[1-a]);
+							}
+						}
 					}
+					tree.edges.add(edge_temp);
+					tree.initialize_nodes();
+					tree.edges.get(edge_counter).display();
+					/*tree.father_code[0][a] = get_graph_index(tree.edges[a].nodes[0]);
+					tree.father_code[1][a] = get_graph_index(tree.edges[a].nodes[1]);
+					tree.draw_from_father_code();*/
+					edge_counter++;
+					//if(edge_counter >= 5) break;
 				}
-			}
-			tree.edges.add(edge_temp);
-			tree.initialize_nodes();
-			tree.edges.get(edge_counter).display();
-			edge_counter++;
-		}
-		else{
-			 edge.edgeColor = color(120, 0, 0);
-			 edge.display();
-		}
+				else{
+					 edge.edgeColor = color(120, 0, 0);
+					 edge.display();
+				}
+			//}
+		//}
 	}
-	else{
-		for(Edge edge: graph.edges){
-			if(edge.edgeColor == color(120, 0, 0)){
-				edge.edgeColor = color(255, 255, 255);
-				edge.display();
-			}
-		}
-		tree.draw_nodes();
-		tree.draw_edges();
-	}
+	/*for(int a = 0; a < node_count; a++){
+		tree.nodes[a] = graph.nodes[a];
+	}*/
+	
+	tree.draw_nodes();
+	tree.draw_edges();
 	counter_rijks++;
+	
 }
 
 boolean determine_path(Node start, Node end){
@@ -107,6 +128,7 @@ void bubble_sort_by_weight(ArrayList<Edge> edge, int length){
 		for(int b = a+1; b < edge.size(); b++){
 			if(edge.get(a).weight > edge.get(b).weight){
 				Edge temp = edge.get(a);
+				//edge.get(a) = edge.get(b);
 				edge.set(a, edge.get(b));
 				edge.set(b, temp);
 			}
@@ -124,3 +146,12 @@ int combination(int i, int j){
 	}
 	return result;
 }
+
+/*int get_graph_index(Node node){
+	for(int a = 0; a < graph.node_count; a++){
+		if(graph.nodes[a] == node){
+			return a;
+		}
+	}
+	return 0;
+}*/
